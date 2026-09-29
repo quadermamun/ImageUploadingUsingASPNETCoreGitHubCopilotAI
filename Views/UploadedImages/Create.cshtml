@@ -1,0 +1,31 @@
+@model ASPCoreWebMVC.Models.UploadedImage
+
+@{
+    ViewData["Title"] = "Upload Image";
+}
+
+<h1>Upload Image</h1>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="file">Choose image</label>
+        <input type="file" name="file" id="file" class="form-control" accept="image/*" />
+    </div>
+    <div style="margin-top:1rem;">
+        <button type="submit" class="btn btn-primary">Upload</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to list</a>
+    </div>
+    @Html.AntiForgeryToken()
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="text-danger">
+        <ul>
+            @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@err.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}

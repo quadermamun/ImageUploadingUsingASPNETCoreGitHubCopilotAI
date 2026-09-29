@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Upload Image";
+}
+
+<h1>Upload Image</h1>
+
+<form asp-action="Upload" asp-controller="Home" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="images">Choose images</label>
+        <input type="file" id="images" name="images" accept="image/*" multiple />
+    </div>
+    <div style="margin-top:1rem;">
+        <button type="submit">Upload</button>
+    </div>
+    @Html.AntiForgeryToken()
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div style="color:red; margin-top:1rem;">
+        <ul>
+            @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@err.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+@if (ViewBag.UploadedFiles != null)
+{
+    var files = (IEnumerable<string>)ViewBag.UploadedFiles;
+    <div style="margin-top:1rem;">
+        <h2>Uploaded</h2>
+        <ul>
+            @foreach (var f in files)
+            {
+                <li><a href="@f" target="_blank">@f</a></li>
+            }
+        </ul>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:0.5rem;">
+            @foreach (var f in files)
+            {
+                <img src="@f" alt="Uploaded image" style="max-width:200px; max-height:200px;" />
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,55 @@
+@model ASPCoreWebMVC.Utilities.PaginatedList<ASPCoreWebMVC.Models.UploadedImage>
+
+@{
+    ViewData["Title"] = "Uploaded Images";
+}
+
+<h1>Uploaded Images</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Upload new image</a>
+</p>
+
+@if (!Model.Any())
+{
+    <p>No images found.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3" style="margin-bottom:1rem;">
+                <div class="card">
+                    <img class="card-img-top" src="@item.FilePath" alt="" style="max-height:180px; object-fit:cover;" />
+                    <div class="card-body">
+                        <p class="card-text text-truncate">@item.FileName</p>
+                        <p class="card-text small">@item.UploadedAt.ToLocalTime().ToString()</p>
+                        <p>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <nav aria-label="Page navigation" style="margin-top:1rem;">
+        <ul class="pagination">
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageIndex - 1)">Previous</a>
+            </li>
+            @for (var p = 1; p <= Model.TotalPages; p++)
+            {
+                <li class="page-item @(p == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@p">@p</a>
+                </li>
+            }
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageIndex + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
+}
